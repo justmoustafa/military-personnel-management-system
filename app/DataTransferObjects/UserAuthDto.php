@@ -1,7 +1,8 @@
 <?php
 
 namespace App\DataTransferObjects;
-use App\Http\Requests\UserRegisterRequest
+use App\Http\Requests\UserRegisterRequest;
+use Illuminate\Support\Facades\Hash;
 
 class UserAuthDto
 {
@@ -19,7 +20,7 @@ class UserAuthDto
         return new self(
             police_id: $request->validated('police_id'),
             name: $request->validated('name'),
-            password: $request->validated('password'),
+            password: Hash::make($request->validated('password')),
             role: $request->validated('role'),
         );
     }
