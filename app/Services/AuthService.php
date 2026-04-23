@@ -2,24 +2,28 @@
 
 namespace App\Services;
 use App\DataTransferObjects\UserAuthDto;
-use App\Http\Requests\UserRegisterRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-
+use App\Services\UserService;
 class AuthService
 {
-    public function register(UserRegisterRequest $request) : ?User
+    public function __construct(
+        protected UserService $userService
+    )
+    {}
+    public function register(UserAuthDto $userAuthDto) : ?User
     {
-        $user = User::create([
-            UserAuthDto::fromRequest($request),
-        ]);
+        $data = $userAuthDto->toArray();
+        $data['username'] = $this->userService->generateUsername($userAuthDto->police_id);
+
+        $user = User::create($data);
 
         return $user;
     }
 
-    public function authenticate(string $police_id, string $password): ?User
+    public function authenticate(string $username, string $password): ?User
     {
-        $user = User::where('police_id', $police_id)->first();
+        $user = User::where('username', $username)->first();
 
         if ($user && Hash::check($password, $user->password)) {
             return $user;

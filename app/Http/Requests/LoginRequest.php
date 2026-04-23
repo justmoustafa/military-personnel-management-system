@@ -2,16 +2,17 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\UserRoleEnum;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UserRegisterRequest extends FormRequest
+class LoginRequest extends FormRequest
 {
+    /**
+     * Determine if the user is authorized to make this request.
+     */
     public function authorize(): bool
     {
-        return true;
-//        return auth()->check() && auth()->user()->role === UserRoleEnum::Admin;
+        return auth()->guest();
     }
 
     /**
@@ -22,10 +23,8 @@ class UserRegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'police_id' => 'required',
-            'password' => 'required|string|min:8|confirmed',
-            'role' => 'required|in:admin,affairs_soldier,operations_soldier',
+            'username' => 'required|string',
+            'password' => 'required|string',
         ];
     }
 }

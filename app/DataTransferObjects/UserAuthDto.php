@@ -24,4 +24,13 @@ class UserAuthDto
             role: $request->validated('role'),
         );
     }
+    public function toArray(): array
+    {
+        return [
+            'name'     => $this->name,
+            'police_id' => $this->police_id,
+            'password' => $this->password,
+            'role'     => $this->role,
+        ];
+    }
 }

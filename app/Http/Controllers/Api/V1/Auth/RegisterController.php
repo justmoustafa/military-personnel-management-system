@@ -6,12 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRegisterRequest;
 use App\Http\Resources\UserResource;
 use App\Services\AuthService;
+use App\DataTransferObjects\UserAuthDto;
 
 class RegisterController extends Controller
 {
     public function __invoke(UserRegisterRequest $request, AuthService $authService)
     {
-        $user = $authService->register($request);
+        $userAuthdto = UserAuthDto::fromRequest($request);
+        $user = $authService->register($userAuthdto);
 
         if(!$user) {
             return response()->json(['message' => 'Registration failed'], 500);
